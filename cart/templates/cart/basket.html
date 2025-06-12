@@ -1,0 +1,215 @@
+{% load static %}
+<!doctype html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سبد خرید</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/adminlte.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/all.js' %}"></script>
+</head>
+<body>
+<header>
+    <div class="container-fluid bg-gradient-primary">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg header-menu text-right px-0">
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"><i class="fas fa-bars"></i></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="{% url 'home' %}">صفحه اصلی</a>
+                        </li>
+                        <div class="px-2"></div>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="{% url 'about' %}">درباره ما</a>
+                        </li>
+                        <div class="px-2"></div>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="{% url 'contact' %}">تماس با ما</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="text-left col-md-3 mt-2">
+                    {% if user.is_authenticated %}
+                        <i class="fa fa-user"></i> <span class="text-white">{{ user.username }}</span>
+                        <span>/</span>
+                        <a class="text-white" href="{% url 'logout' %}">خروج</a>
+                    {% else %}
+                        <i class="fa fa-user"></i> <a class="text-white" href="{% url 'login' %}">ورود</a>
+                        <span>/</span>
+                        <a class="text-white" href="{% url 'register' %}">ثبت نام</a>
+                    {% endif %}
+                    |
+                    <a href="{% url 'cart' %}">
+                        <i class="text-white fa fa-shopping-bag"></i>
+                        <span id="cart-counter" class="badge badge-light">{{ cart_items_count }}</span>
+                    </a>
+                    <a href="{% url 'wishlist' %}">
+                        <i class="text-white fa fa-heart"></i>
+                    </a>
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+<main>
+    <div class="container">
+        <div class="row px-3 py-5">
+            <h5 class="font-weight-bold">حساب کاربری من</h5>
+            <div class="d-inline pt-2">
+                <span class="mx-4">|</span>
+                <h6 class="text-muted d-inline">سبد خرید</h6>
+            </div>
+        </div>
+        <div class="row pb-5">
+            <div class="col-md-4">
+                <div class="card shadow text-right">
+                    <div class="card-body">
+                        <span class="font-weight-bold">پنل کاربری</span>
+                        <hr>
+                        <div class="menu-user">
+                            <ul class="px-0">
+                                <li><a href="{% url 'profile' %}"><i class="fas fa-user ml-3"></i>اطلاعات حساب</a></li>
+                                <br>
+                                <li><a href="{% url 'password_change' %}"><i class="fas fa-key ml-3"></i>ویرایش کلمه عبور</a></li>
+                                <br>
+                                <li><a href="{% url 'cart' %}"><i class="fas fa-shopping-bag ml-3"></i>سبد خرید</a></li>
+                                <br>
+                                <li><a href="{% url 'wishlist' %}"><i class="fa fa-heart ml-3"></i>علاقه مندی ها</a></li>
+                                <br>
+                                <li><a href="{% url 'contact' %}"><i class="fas fa-phone ml-3"></i>تماس با ما</a></li>
+                            </ul>
+                            <hr>
+                            <span><a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt ml-3"></i>خروج</a></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card shadow text-right h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between px-4">
+                            <h6 class="font-weight-bold">سبد خرید</h6>
+                        </div>
+                        <hr/>
+                        {% if cart_items %}
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>محصول</th>
+                                    <th>سایز</th>
+                                    <th>رنگ</th>
+                                    <th>تعداد</th>
+                                    <th>قیمت</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in cart_items %}
+                                <tr>
+                                    <td>{{ item.product.name }}</td>
+                                    <td>{{ item.size }}</td>
+                                    <td>{{ item.color }}</td>
+                                    <td>
+                                        <input type="number" class="form-control count" value="{{ item.quantity }}" min="1" data-item-id="{{ item.id }}">
+                                    </td>
+                                    <td class="price">{{ item.product.price }} تومان</td>
+                                    <td>
+                                        <button class="btn btn-danger btn-sm remove-item" data-item-id="{{ item.id }}">حذف</button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <div class="text-left">
+                            <h5>جمع کل: <span class="lasttotal">{{ total_price }} تومان</span></h5>
+                        </div>
+                        <button type="submit" name="payment" class="btn btn-success btn-block mt-3">تکمیل سفارش</button>
+                        {% else %}
+                        <div class="alert alert-info">
+                            سبد خرید شما خالی است!
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <div class="container-fluid text-white py-4 bg-gradient-primary">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-sm-12 text-right">
+                    <span>کلیه حقوق این سایت متعلق به فروشگاه safe می‌باشد.</span>
+                </div>
+                <div class="col-md-6 col-sm-12">
+                    <i class="fab fa-linkedin-in" style="font-size: 1.8rem"></i>
+                    <i class="fab fa-instagram mx-3" style="font-size: 1.8rem"></i>
+                    <i class="fab fa-telegram-plane" style="font-size: 1.8rem"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script>
+$(document).ready(function() {
+    // Update quantity
+    $(document).on('change', '.count', function(){
+        var itemId = $(this).data('item-id');
+        var newQuantity = $(this).val();
+
+        $.ajax({
+            url: '{% url "update_cart_item" %}',
+            type: 'POST',
+            data: {
+                'item_id': itemId,
+                'quantity': newQuantity,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function(data) {
+                if(data.status == 'success') {
+                    location.reload();
+                }
+            }
+        });
+    });
+
+    // Remove item
+    $(document).on('click', '.remove-item', function(){
+        var itemId = $(this).data('item-id');
+
+        $.ajax({
+            url: '{% url "remove_cart_item" %}',
+            type: 'POST',
+            data: {
+                'item_id': itemId,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function(data) {
+                if(data.status == 'success') {
+                    location.reload();
+                }
+            }
+        });
+    });
+
+    // Checkout
+    $('button[name="payment"]').click(function() {
+        window.location.href = '{% url "checkout" %}';
+    });
+});
+</script>
+</body>
+</html>

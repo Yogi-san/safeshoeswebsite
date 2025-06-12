@@ -1,0 +1,20 @@
+{% extends 'products/base.html' %}
+
+{% block content %}
+<h1>سبد خرید شما</h1>
+{% if cart.items.all %}
+<table class="table">
+    {% for item in cart.items.all %}
+    <tr>
+        <td>{{ item.product.name }}</td>
+        <td>{{ item.size }}</td>
+        <td>{{ item.color }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>{{ item.total_price }} تومان</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>سبد خرید شما خالی است!</p>
+{% endif %}
+{% endblock %}

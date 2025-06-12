@@ -1,0 +1,23 @@
+{% csrf_token %}
+<div class="product-detail">
+    {% if product.image %}
+        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+    {% endif %}
+    <h1>{{ product.name }}</h1>
+    <p>{{ product.description }}</p>
+    <p>قیمت: {{ product.price }} تومان</p>
+
+    <div class="color-options">
+        <label>رنگ‌ها:</label>
+        <label>
+            <input type="radio" name="color" value="مشکی">
+            مشکی
+        </label>
+        <label>
+            <input type="radio" name="color" value="قرمز">
+            قرمز
+        </label>
+    </div>
+
+    <button type="submit" class="add-to-cart">افزودن به سبد</button>
+</div>

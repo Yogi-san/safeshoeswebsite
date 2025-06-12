@@ -1,0 +1,154 @@
+{% load static %}
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تماس با ما</title>
+    <!-- css -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/adminlte.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <!-- js -->
+    <script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <!-- icon -->
+    <script src="{% static 'js/all.js' %}"></script>
+</head>
+<body>
+<header>
+    <div class="container-fluid bg-gradient-primary">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg header-menu text-right px-0">
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"><i class="fas fa-bars"></i></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ">
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="{% url 'index' %}">صفحه اصلی</a>
+                        </li>
+                        <div class="px-2"></div>
+
+                        <div class="px-2"></div>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="{% url 'aboutus' %}">درباره ما</a>
+                        </li>
+                        <div class="px-2"></div>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="{% url 'contactus' %}">تماس با ما</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="text-left col-md-3 mt-2">
+                    <i class="fa fa-user"></i> <a class="text-white" href="{% url 'login' %}">ورود</a>
+                    <span>/</span>
+                    <a class="text-white" href="{% url 'register' %}">ثبت نام</a>
+                    |
+                    <a href="{% url 'basket' %}">
+                        <i class="text-white fa fa-shopping-bag"></i>
+                    </a>
+                    <a href="{% url 'favorite' %}">
+                        <i class="text-white fa fa-heart"></i>
+                    </a>
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+<main>
+    <div class="container">
+        <div class="row py-5">
+        </div>
+        <div class="row pb-5">
+            <div class="col-4">
+                <div class="card shadow text-right">
+                    <div class="card-body">
+                        <span class="font-weight-bold">اطلاعات تماس</span>
+                        <hr>
+                        <div class="menu-user">
+                            <ul class="px-0">
+                                <li><i class="fas fa-phone ml-3"></i>تلفن: {{ contact_info.phone }}</li>
+                                <br>
+                                <li><i class="fas fa-mobile-alt ml-3"></i>موبایل: {{ contact_info.mobile }}</li>
+                                <br>
+                                <li><i class="far fa-envelope ml-3"></i>ایمیل: {{ contact_info.email }}</li>
+                                <br>
+                                <li><i class="far fa-address-card ml-3"></i>آدرس: {{ contact_info.address }}</li>
+                                <br>
+                                <li><i class="fab fa-instagram ml-3"></i>اینستاگرام: <a href="https://instagram.com/{{ contact_info.instagram }}">instagram</a></li>
+                                <br>
+                                <li><i class="fab fa-whatsapp ml-3"></i>واتس اپ: <a href="https://wa.me/{{ contact_info.whatsapp }}">whatsapp</a></li>
+                                <br>
+                                <li><i class="fab fa-telegram-plane ml-3"></i>تلگرام: <a href="https://t.me/{{ contact_info.telegram }}">telegram</a></li>
+                                <br>
+                            </ul>
+                            <hr>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-8">
+                <div class="card shadow text-right">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between px-4">
+                            <span class="font-weight-bold">ارسال پیام</span>
+                        </div>
+                        <hr/>
+                        {% if message %}
+                            <div class="alert alert-{{ message_type }}">{{ message }}</div>
+                        {% endif %}
+                        <form class="form-group px-3" action="{% url 'contactus' %}" method="post">
+                            {% csrf_token %}
+                            <div class="form-group row">
+                                <div class="form-group col-6">
+                                    <label><i class="fas fa-heading ml-2 text-muted"></i>نام</label>
+                                    <label>
+                                        <input type="text" name="name" value="{{ form_data.name }}" class="form-control" placeholder="نام خود را وارد کنید" required>
+                                    </label>
+                                </div>
+                                <div class="form-group col-6">
+                                    <label><i class="fas fa-at ml-2 text-muted"></i>پست الکترونیک</label>
+                                    <label>
+                                        <input type="email" name="email" value="{{ form_data.email }}" class="form-control" placeholder="ایمیل خود را وارد کنید" required>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-file-alt ml-2 text-muted"></i>متن پیام</label>
+                                <label>
+                                    <textarea rows="6" name="content" class="form-control" placeholder="متن پیام خود را وارد نمایید" required>{{ form_data.content }}</textarea>
+                                </label>
+                            </div>
+                            <br>
+                            <div class="text-left">
+                                <button type="submit" name="submit" class="btn btn-success w-25">ارسال</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<footer>
+    <div class="container-fluid text-white py-4 bg-gradient-primary">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-sm-12 text-right">
+                    <span>کلیه حقوق این سایت متعلق به فروشگاه safe می‌باشد.</span>
+                </div>
+                <div class="col-md-6 col-sm-12">
+                    <i class="fab fa-linkedin-in" style="font-size: 1.8rem"></i>
+                    <i class="fab fa-instagram mx-3" style="font-size: 1.8rem"></i>
+                    <i class="fab fa-telegram-plane" style="font-size: 1.8rem"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+</body>
+</html>
